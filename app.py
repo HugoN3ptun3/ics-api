@@ -1,14 +1,3 @@
-from flask import Flask, request, jsonify, send_from_directory
-from ics import Calendar, Event
-from datetime import datetime
-import pytz
-import os
-import uuid
-
-app = Flask(__name__)
-ics_dir = "ics_files"
-os.makedirs(ics_dir, exist_ok=True)
-
 @app.route("/generate", methods=["POST"])
 def generate_ics():
     data = request.json
@@ -20,3 +9,7 @@ def generate_ics():
 
     try:
         # Parse and localize times
+        start = tz.localize(datetime.fromisoformat(data["startTime"]))
+        end = tz.localize(datetime.fromisoformat(data["endTime"]))
+    except Exception as e:
+        return jsonify({"error": f"Invalid date/time format: {str(e)}"}), 400
