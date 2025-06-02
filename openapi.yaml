@@ -1,8 +1,10 @@
 openapi: 3.1.0
 info:
   title: ICS File Generator
-  version: 1.0.0
-  description: Generates downloadable `.ics` calendar files for events that can be added to any calendar app.
+  version: 1.1.0
+  description: >
+    Generates downloadable `.ics` calendar files for events.
+    Supports specifying time zones for accurate local scheduling.
 servers:
   - url: https://ics-api-bp0p.onrender.com
 paths:
@@ -33,11 +35,18 @@ paths:
                 startTime:
                   type: string
                   format: date-time
-                  description: Start time (ISO 8601 format)
+                  description: >
+                    Start time in ISO 8601 format (e.g., "2025-06-15T07:00:00")
                 endTime:
                   type: string
                   format: date-time
-                  description: End time (ISO 8601 format)
+                  description: >
+                    End time in ISO 8601 format (e.g., "2025-06-15T08:00:00")
+                timezone:
+                  type: string
+                  description: >
+                    Optional IANA timezone name (e.g., "America/New_York", "Europe/London").
+                    If not provided, defaults to UTC.
       responses:
         '200':
           description: A downloadable .ics file URL
