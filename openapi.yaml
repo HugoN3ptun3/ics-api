@@ -1,17 +1,19 @@
 openapi: 3.1.0
 info:
-  title: ICS File Generator
-  version: 1.1.0
-  description: >
-    Generates downloadable `.ics` calendar files for events.
-    Supports specifying time zones for accurate local scheduling.
+  title: ICS Calendar API
+  description: API for generating downloadable .ics calendar files with support for multiple events and time zones.
+  version: 1.0.0
+
 servers:
   - url: https://ics-api-bp0p.onrender.com
+    description: Production server
+
 paths:
   /generate:
     post:
       operationId: generateIcsFile
-      summary: Generate a downloadable .ics file for a calendar event
+      summary: Generate an ICS file containing multiple calendar events.
+      description: Accepts a list of events and a timezone, and returns a downloadable `.ics` calendar file.
       requestBody:
         required: true
         content:
@@ -19,37 +21,48 @@ paths:
             schema:
               type: object
               required:
-                - title
-                - startTime
-                - endTime
+                - timezone
+                - events
               properties:
-                title:
-                  type: string
-                  description: Title of the event
-                description:
-                  type: string
-                  description: Description of the event
-                location:
-                  type: string
-                  description: Location of the event
-                startTime:
-                  type: string
-                  format: date-time
-                  description: >
-                    Start time in ISO 8601 format (e.g., "2025-06-15T07:00:00")
-                endTime:
-                  type: string
-                  format: date-time
-                  description: >
-                    End time in ISO 8601 format (e.g., "2025-06-15T08:00:00")
                 timezone:
                   type: string
-                  description: >
-                    Optional IANA timezone name (e.g., "America/New_York", "Europe/London").
-                    If not provided, defaults to UTC.
+                  description: The user's timezone in IANA format (e.g. America/Chicago)
+                  example: America/Chicago
+                events:
+                  type: array
+                  description: List of calendar events to include in the ICS file.
+                  items:
+                    type: object
+                    required:
+                      - title
+                      - startTime
+                      - endTime
+                    properties:
+                      title:
+                        type: string
+                        description: Title of the event
+                        example: Team Sync Meeting
+                      description:
+                        type: string
+                        description: Description of the event
+                        example: Discuss weekly progress
+                      location:
+                        type: string
+                        description: Location of the event
+                        example: Zoom
+                      startTime:
+                        type: string
+                        format: date-time
+                        description: ISO 8601 start time
+                        example: 2025-06-04T15:00:00
+                      endTime:
+                        type: string
+                        format: date-time
+                        description: ISO 8601 end time
+                        example: 2025-06-04T15:30:00
       responses:
         '200':
-          description: A downloadable .ics file URL
+          description: Download link for the generated ICS file
           content:
             application/json:
               schema:
@@ -58,4 +71,5 @@ paths:
                   downloadUrl:
                     type: string
                     format: uri
-                    description: Public URL to download the .ics file
+                    description: Direct link to download the generated ICS file
+                    example: https://ics-api-bp0p.onrender.com/ics/abc123.ics
