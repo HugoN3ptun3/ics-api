@@ -34,5 +34,9 @@ def generate_ics():
 def serve_ics(filename):
     return send_from_directory(ics_dir, filename)
 
+@app.route("/openapi.yaml")
+def serve_openapi_spec():
+    return send_from_directory('.', 'openapi.yaml', mimetype='text/yaml')
+
 if __name__ == "__main__":
     app.run(debug=True)

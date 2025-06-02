@@ -1,0 +1,52 @@
+openapi: 3.1.0
+info:
+  title: ICS File Generator
+  version: 1.0.0
+  description: Generates downloadable `.ics` calendar files for events that can be added to any calendar app.
+servers:
+  - url: https://ics-api-bp0p.onrender.com
+paths:
+  /generate:
+    post:
+      operationId: generateIcsFile
+      summary: Generate a downloadable .ics file for a calendar event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - startTime
+                - endTime
+              properties:
+                title:
+                  type: string
+                  description: Title of the event
+                description:
+                  type: string
+                  description: Description of the event
+                location:
+                  type: string
+                  description: Location of the event
+                startTime:
+                  type: string
+                  format: date-time
+                  description: Start time (ISO 8601 format)
+                endTime:
+                  type: string
+                  format: date-time
+                  description: End time (ISO 8601 format)
+      responses:
+        '200':
+          description: A downloadable .ics file URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  downloadUrl:
+                    type: string
+                    format: uri
+                    description: Public URL to download the .ics file
